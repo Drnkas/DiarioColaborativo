@@ -1,7 +1,15 @@
+import 'package:diario_colaborativo/core/flavor/flavor.dart';
 import 'package:flutter/material.dart';
 
+import 'app.dart';
+
 void main() {
-  runApp(const MyApp());
+  bootstrap(
+    FlavorConfig(
+        baseUrl: 'www.google.com.br',
+        flavor: AppFlavor.prod
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
