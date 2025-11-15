@@ -5,6 +5,7 @@ import 'package:diario_colaborativo/core/flavor/flavor.dart';
 import 'package:diario_colaborativo/core/widgets/alert/alert_area_cubit.dart';
 import 'package:diario_colaborativo/features/auth/data/auth_datasource.dart';
 import 'package:diario_colaborativo/features/auth/session/session_cubit.dart';
+import 'package:diario_colaborativo/features/profile/data/profile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -37,7 +38,7 @@ Future<void> configureDependencies(FlavorConfig config) async {
 
   // Firebase Auth - REGISTRAR ANTES DOS DEPENDENTES!
   getIt.registerSingleton(FirebaseAuth.instance);
-  getIt.registerFactory(() => GoogleSignIn());
+  // getIt.registerFactory(() => GoogleSignIn());
 
   getIt.registerSingleton(AlertAreaCubit());
 
@@ -54,6 +55,8 @@ Future<void> configureDependencies(FlavorConfig config) async {
 
   getIt.registerSingleton(FirebaseRemoteConfig.instance);
   getIt.registerSingleton(AppRemoteConfig(getIt()));
+
+ getIt.registerLazySingleton<ProfileService>(() => ProfileService());
 
   getIt.registerFactory(() => AppPackageInfo());
   getIt.registerFactory(() => AppLocation());

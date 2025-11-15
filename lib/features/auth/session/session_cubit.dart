@@ -22,7 +22,7 @@ class SessionCubit extends Cubit<SessionState> {
   Future<Result<LoginFailed, AppUser>> login({required String email, required String password}) async {
     final result = await _authRepository.login(email: email, password: password);
 
-    if(result case Success(object: final user)){
+    if (result case Success(object: final user)) {
       emit(state.copyWith(loggedUser: user));
     }
 
@@ -31,7 +31,7 @@ class SessionCubit extends Cubit<SessionState> {
 
   Future<Result<SignUpFailed, AppUser>> signUp(SignUpDto signUpDto) async {
     final result = await _authRepository.signUp(signUpDto);
-    if(result case Success(object: final user)) {
+    if (result case Success(object: final user)) {
       emit(state.copyWith(loggedUser: user));
     }
     return result;
@@ -40,7 +40,27 @@ class SessionCubit extends Cubit<SessionState> {
   Future<Result<ValidateTokenFailed, AppUser>> validateToken() async {
     final result = await _authRepository.validateToken();
 
-    if (result case Success(object: final user)){
+    if (result case Success(object: final user)) {
+      emit(state.copyWith(loggedUser: user));
+    }
+
+    return result;
+  }
+
+  // Future<Result<LoginFailed, AppUser>> signInWithGoogle() async {
+  //   final result = await _authRepository.signInWithGoogle();
+
+  //   if (result case Success(object: final user)) {
+  //     emit(state.copyWith(loggedUser: user));
+  //   }
+
+  //   return result;
+  // }
+
+  Future<Result<LoginFailed, AppUser>> signInWithApple() async {
+    final result = await _authRepository.signInWithApple();
+
+    if (result case Success(object: final user)) {
       emit(state.copyWith(loggedUser: user));
     }
 
@@ -52,5 +72,10 @@ class SessionCubit extends Cubit<SessionState> {
     // sendo assim, é gerado um novo estado de SessionState
     await _authRepository.logout();
     emit(const SessionState(loggedUser: null));
+  }
+
+  /// Atualiza os dados do usuário logado
+  void updateUser(AppUser updatedUser) {
+    emit(SessionState(loggedUser: updatedUser));
   }
 }

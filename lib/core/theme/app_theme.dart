@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppTheme{
+  final bg = const Color(0xfffafafa);
   final primary = const Color(0xFFFFB6B9);
   final darkPrimary = const Color(0xFFCBAACB);
   final secondary = const Color(0xFFDFF5E1);
@@ -49,6 +50,18 @@ class AppTheme{
 
   late final body16Bold = TextStyle(
     fontSize: 16,
+    color: black,
+    fontWeight: FontWeight.bold,
+  );
+
+  late final body14Bold = TextStyle(
+    fontSize: 14,
+    color: black,
+    fontWeight: FontWeight.bold,
+  );
+
+  late final heading18Bold = TextStyle(
+    fontSize: 18,
     color: black,
     fontWeight: FontWeight.bold,
   );

@@ -1,12 +1,14 @@
 import 'package:diario_colaborativo/features/auth/pages/auth/auth_page.dart';
 import 'package:diario_colaborativo/features/auth/pages/login/login_page.dart';
 import 'package:diario_colaborativo/features/auth/pages/sign_up/signup_page.dart';
+import 'package:diario_colaborativo/features/home/pages/base/base_page.dart';
 import 'package:diario_colaborativo/features/intro/pages/force_update/force_update_page.dart';
 import 'package:diario_colaborativo/features/intro/pages/maintenance/maintenance_page.dart';
 import 'package:diario_colaborativo/features/intro/pages/not_found_page/not_found_page.dart';
 import 'package:diario_colaborativo/features/intro/pages/onboarding/onboarding_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/material.dart';
 
 import '../../features/intro/pages/splash/splash_page.dart';
 
@@ -49,9 +51,9 @@ final router = GoRouter(
       path: AppRoutes.forceUpdate,
       builder: (context, state) => const ForceUpdatePage(),
     ),
-    GoRoute(
+     GoRoute(
       path: AppRoutes.home,
-      builder: (context, state) =>  Container(),
+      builder: (context, state) => const BasePage(),
     ),
 
   ],
