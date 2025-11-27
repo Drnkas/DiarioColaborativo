@@ -48,13 +48,13 @@ class _OnboardingPageState extends State<OnboardingPage> implements OnboardingPa
                 title: 'Seja Bem-vindo(a)!',
                 body:
                 'Você poderá encontrar profissionais em sua região e agendar uma consulta com poucos cliques.',
-                imagePath: 'assets/intro/onboarding_2.svg',
+               imagePath: 'assets/logo_rosa.png',
               ),
               if(state.showLocationPage)
                 OnboardingPageInfo(
                     title: 'Acesso à\n localização',
                     body: 'Para facilitar a busca de profissionais em sua região.',
-                    imagePath: 'assets/intro/onboarding_0.svg',
+                    imagePath: 'assets/logo_rosa.png',
                     onNextPressed: cubit.requestLocationPermission
                 ),
               if(state.showNotificationPage)
@@ -62,14 +62,14 @@ class _OnboardingPageState extends State<OnboardingPage> implements OnboardingPa
                     title: 'Ative as\n notificações',
                     body:
                     'Para receber avisos importantes sobre os seus agendamentos.',
-                    imagePath: 'assets/intro/onboarding_1.svg',
+                    imagePath: 'assets/logo_rosa.png',
                     onNextPressed: cubit.requestNotificationPermission
                 ),
               OnboardingPageInfo(
                   title: 'Agende uma\n consulta',
                   body:
                   'Você poderá encontrar profissionais em sua região e agendar uma consulta com poucos cliques.',
-                  imagePath: 'assets/intro/onboarding_2.svg',
+                  imagePath: 'assets/logo_rosa.png',
                   onNextPressed: cubit.finish,
                   customLabel: 'Finalizar'
               ),
