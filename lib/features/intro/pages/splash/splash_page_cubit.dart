@@ -12,18 +12,17 @@ part 'splash_page_state.dart';
 
 enum AppStatus { available, maintenance, forceUpdate }
 
-
 class SplashPageCubit extends Cubit<SplashPageState> {
-  SplashPageCubit(this._actions, {
+  SplashPageCubit(
+    this._actions, {
     AppRemoteConfig? appRemoteConfig,
     AppPackageInfo? appPackageInfo,
     AppPreferences? appPreferences,
-   // SessionCubit? sessionCubit,
-  })
-      : _appRemoteConfig = appRemoteConfig ?? getIt(),
+    // SessionCubit? sessionCubit,
+  })  : _appRemoteConfig = appRemoteConfig ?? getIt(),
         _appPackageInfo = appPackageInfo ?? getIt(),
         _appPreferences = appPreferences ?? getIt(),
-       // _sessionCubit = sessionCubit ?? getIt(),
+        // _sessionCubit = sessionCubit ?? getIt(),
         super(const SplashPageState());
 
   SplashPageActions? _actions;
@@ -34,7 +33,7 @@ class SplashPageCubit extends Cubit<SplashPageState> {
   //final SessionCubit _sessionCubit;
 
   Future<void> initialize() async {
-    final results =  await Future.wait([
+    final results = await Future.wait([
       _initRemoteConfig(),
       _checkLoggedUser(),
       //tempo para ir para o onboarding e colocar animação
@@ -43,17 +42,18 @@ class SplashPageCubit extends Cubit<SplashPageState> {
 
     final appStatus = results[0];
 
-    if(appStatus == AppStatus.maintenance){
+    if (appStatus == AppStatus.maintenance) {
       _actions?.navToMaintenance();
       return;
-    } else if (appStatus == AppStatus.forceUpdate){
+    } else if (appStatus == AppStatus.forceUpdate) {
       _actions?.navToForceUpdate();
       return;
     }
 
-    final shouldShowOnboarding = _appPreferences.shouldShowOnboarding;
+    final shouldShowOnboarding = true;
+     //_appPreferences.shouldShowOnboarding;
 
-    if(shouldShowOnboarding) {
+    if (shouldShowOnboarding) {
       _actions?.navToOnboarding();
       return;
     }
@@ -64,19 +64,18 @@ class SplashPageCubit extends Cubit<SplashPageState> {
     } else {
       _actions?.navToAuth();
     }
-
   }
 
   Future<AppStatus> _initRemoteConfig() async {
     await _appRemoteConfig.initialize();
 
     final isMaintenance = _appRemoteConfig.isMaintenance;
-    if(isMaintenance) return AppStatus.maintenance;
+    if (isMaintenance) return AppStatus.maintenance;
 
     final appMinVersion = _appRemoteConfig.appMinVersion;
     final appVersion = await _appPackageInfo.getBuildNumber();
 
-    if(appVersion < appMinVersion) {
+    if (appVersion < appMinVersion) {
       return AppStatus.forceUpdate;
     } else {
       return AppStatus.available;

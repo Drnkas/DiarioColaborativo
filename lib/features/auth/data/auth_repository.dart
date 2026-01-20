@@ -9,17 +9,17 @@ import 'package:diario_colaborativo/features/auth/models/user.dart';
 import '../../../core/helpers/result.dart';
 
 class AuthRepository {
-
   AuthRepository(this._datasource, this._appSecureStorage);
 
   final AuthDatasource _datasource;
   final AppSecureStorage _appSecureStorage;
 
-  Future<Result<LoginFailed, AppUser>> login({required String email, required String password}) async {
+  Future<Result<LoginFailed, AppUser>> login(
+      {required String email, required String password}) async {
     final result = await _datasource.login(email: email, password: password);
 
-    if(result case Success(object: final user)){
-      await _appSecureStorage.saveSessionToken(user.token);
+    if (result case Success(object: final user)) {
+      await _appSecureStorage.saveSessionToken(user.uid);
     }
 
     return result;
@@ -27,22 +27,42 @@ class AuthRepository {
 
   Future<Result<SignUpFailed, AppUser>> signUp(SignUpDto signUpDto) async {
     final result = await _datasource.signUp(signUpDto);
-    if(result case Success(object: final user)) {
-      await _appSecureStorage.saveSessionToken(user.token);
+    if (result case Success(object: final user)) {
+      await _appSecureStorage.saveSessionToken(user.uid);
     }
     return result;
   }
 
   Future<Result<ValidateTokenFailed, AppUser>> validateToken() async {
     final token = await _appSecureStorage.getSessionToken();
-    if(token == null) {
+    if (token == null) {
       return const Failure(ValidateTokenFailed.invalidToken);
     }
     return _datasource.validateToken(token);
   }
 
-  Future<void> logout() {
-    return _appSecureStorage.deleteSessionToken();
+  // Future<Result<LoginFailed, AppUser>> signInWithGoogle() async {
+  //   final result = await _datasource.signInWithGoogle();
+
+  //   if (result case Success(object: final user)) {
+  //     await _appSecureStorage.saveSessionToken(user.uid);
+  //   }
+
+  //   return result;
+  // }
+
+  Future<Result<LoginFailed, AppUser>> signInWithApple() async {
+    final result = await _datasource.signInWithApple();
+
+    if (result case Success(object: final user)) {
+      await _appSecureStorage.saveSessionToken(user.uid);
+    }
+
+    return result;
   }
 
+  Future<void> logout() async {
+    await _datasource.signOut();
+    await _appSecureStorage.deleteSessionToken();
+  }
 }

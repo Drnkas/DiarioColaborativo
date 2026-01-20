@@ -8,8 +8,6 @@ import 'package:formz/formz.dart';
 import '../../../../core/helpers/result.dart';
 import '../../../../core/widgets/alert/alert_area_cubit.dart';
 import '../../../../di/di.dart';
-import '../../models/cellphone.dart';
-import '../../models/cpf.dart';
 import '../../models/email.dart';
 import '../../models/full_name.dart';
 import '../../models/password.dart';

@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_base_page.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_logo.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/app_social_button.dart';
 import '../../models/email.dart';
 import '../../models/password.dart';
 import 'login_page_cubit.dart';
@@ -20,69 +20,108 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> implements LoginPageActions{
-
+class _LoginPageState extends State<LoginPage> implements LoginPageActions {
   @override
   Widget build(BuildContext context) {
     final AppTheme t = context.watch();
 
     return BlocProvider(
       create: (context) => LoginPageCubit(this),
-      child: BlocBuilder<LoginPageCubit,LoginPageState>(
+      child: BlocBuilder<LoginPageCubit, LoginPageState>(
           builder: (context, state) {
-            return AppBasePage(
-              title: 'Login',
-              isLoading: state.isLoading,
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // const Center(
-                  //   child: AppLogo(),
-                  // ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Bem vindo(a) de volta!',
-                    textAlign: TextAlign.center,
-                    style: t.heading36Bold,
-                  ),
-                  const SizedBox(height: 32),
+        return AppBasePage(
+          title: 'Login',
+          isLoading: state.isLoading,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // const Center(
+              //   child: AppLogo(),
+              // ),
+              const SizedBox(height: 10),
+              Text(
+                'Bem vindo(a) de volta!',
+                textAlign: TextAlign.center,
+                style: t.heading36Bold,
+              ),
+              const SizedBox(height: 32),
 
-                  AppTextField(
-                    title: 'E-mail',
-                    hint: 'Informe seu e-mail',
-                    textInputType: TextInputType.emailAddress,
-                    onChanged: context.read<LoginPageCubit>().onEmailChanged,
-                    error: switch(state.email.displayError) {
-                      EmailValidationError.empty => 'Campo obrigatório',
-                      EmailValidationError.invalid => 'E-mail inválido',
-                      _ => null,
-                    },
+              AppTextField(
+                title: 'E-mail',
+                hint: 'Informe seu e-mail',
+                textInputType: TextInputType.emailAddress,
+                onChanged: context.read<LoginPageCubit>().onEmailChanged,
+                error: switch (state.email.displayError) {
+                  EmailValidationError.empty => 'Campo obrigatório',
+                  EmailValidationError.invalid => 'E-mail inválido',
+                  _ => null,
+                },
+              ),
+              const SizedBox(height: 24),
+              AppTextField(
+                title: 'Senha',
+                hint: 'Informe uma senha forte',
+                obscure: true,
+                onChanged: context.read<LoginPageCubit>().onPasswordChanged,
+                error: switch (state.password.displayError) {
+                  PasswordValidationError.empty => 'Campo obrigatório',
+                  PasswordValidationError.tooShort => 'Senha muito curta',
+                  _ => null,
+                },
+              ),
+              const SizedBox(height: 24),
+              AppButton(
+                label: 'Entrar',
+                onPressed: state.isValid
+                    ? () {
+                        FocusScope.of(context).unfocus();
+                        context.read<LoginPageCubit>().onLoginPressed();
+                      }
+                    : null,
+              ),
+              const SizedBox(height: 24),
+
+              // Divisor "OU"
+              Row(
+                children: [
+                  Expanded(child: Divider(color: Colors.grey.withOpacity(0.3))),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'OU',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 24),
-                  AppTextField(
-                    title: 'Senha',
-                    hint: 'Informe uma senha forte',
-                    obscure: true,
-                    onChanged: context.read<LoginPageCubit>().onPasswordChanged,
-                    error:switch(state.password.displayError) {
-                      PasswordValidationError.empty => 'Campo obrigatório',
-                      PasswordValidationError.tooShort => 'Senha muito curta',
-                      _ => null,
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  AppButton(
-                    label: 'Entrar',
-                    onPressed: state.isValid ? () {
-                      FocusScope.of(context).unfocus();
-                      context.read<LoginPageCubit>().onLoginPressed();
-                    }  : null,
-                  )
+                  Expanded(child: Divider(color: Colors.grey.withOpacity(0.3))),
                 ],
               ),
-            );
-          }
-      ),
+              const SizedBox(height: 24),
+
+              // Botões sociais
+              AppGoogleButton(
+                onPressed: state.isLoading
+                    ? null
+                    : () {
+                        // context.read<LoginPageCubit>().onGoogleLoginPressed();
+                      },
+                isLoading: state.isLoading,
+              ),
+              const SizedBox(height: 12),
+              AppAppleButton(
+                onPressed: state.isLoading
+                    ? null
+                    : () {
+                        context.read<LoginPageCubit>().onAppleLoginPressed();
+                      },
+                isLoading: state.isLoading,
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 

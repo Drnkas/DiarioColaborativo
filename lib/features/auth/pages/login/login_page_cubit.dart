@@ -24,36 +24,73 @@ class LoginPageCubit extends Cubit<LoginPageState> {
   final AlertAreaCubit _alertAreaCubit;
   final LoginPageActions _actions;
 
-  Future<void> onLoginPressed() async{
+  Future<void> onLoginPressed() async {
     emit(state.copyWith(isLoading: true));
 
     final result = await _sessionCubit.login(
-        email: state.email.value,
-        password: state.password.value
-    );
+        email: state.email.value, password: state.password.value);
 
-    switch(result) {
+    switch (result) {
       case Success():
         _actions.navToHome();
       case Failure(error: final error):
-        _alertAreaCubit.showAlert(
-            Alert.error(
-                title: switch(error) {
-                  LoginFailed.invalidCredentials => 'E-mail/Senha inválidos.',
-                  LoginFailed.offline => 'Verifique sua conexão com a internet e tente novamente.',
-                  _ => 'Falha ao realizar o login. Por favor tente novamente.'
-                }
-            )
-        );
+        _alertAreaCubit.showAlert(Alert.error(
+            title: switch (error) {
+          LoginFailed.invalidCredentials => 'E-mail/Senha inválidos.',
+          LoginFailed.offline =>
+            'Verifique sua conexão com a internet e tente novamente.',
+          _ => 'Falha ao realizar o login. Por favor tente novamente.'
+        }));
     }
     emit(state.copyWith(isLoading: false));
   }
 
-  void onEmailChanged(String value){
+  void onEmailChanged(String value) {
     emit(state.copyWith(email: Email.dirty(value)));
   }
 
-  void onPasswordChanged(String value){
+  void onPasswordChanged(String value) {
     emit(state.copyWith(password: Password.dirty(value, false)));
+  }
+
+  // Future<void> onGoogleLoginPressed() async {
+  //   emit(state.copyWith(isLoading: true));
+
+  //   final result = await _sessionCubit.signInWithGoogle();
+
+  //   switch (result) {
+  //     case Success():
+  //       _actions.navToHome();
+  //     case Failure(error: final error):
+  //       _alertAreaCubit.showAlert(Alert.error(
+  //           title: switch (error) {
+  //         LoginFailed.invalidCredentials => 'Falha na autenticação com Google.',
+  //         LoginFailed.offline =>
+  //           'Verifique sua conexão com a internet e tente novamente.',
+  //         _ =>
+  //           'Falha ao realizar o login com Google. Por favor tente novamente.'
+  //       }));
+  //   }
+  //   emit(state.copyWith(isLoading: false));
+  // }
+
+  Future<void> onAppleLoginPressed() async {
+    emit(state.copyWith(isLoading: true));
+
+    final result = await _sessionCubit.signInWithApple();
+
+    switch (result) {
+      case Success():
+        _actions.navToHome();
+      case Failure(error: final error):
+        _alertAreaCubit.showAlert(Alert.error(
+            title: switch (error) {
+          LoginFailed.invalidCredentials => 'Falha na autenticação com Apple.',
+          LoginFailed.offline =>
+            'Verifique sua conexão com a internet e tente novamente.',
+          _ => 'Falha ao realizar o login com Apple. Por favor tente novamente.'
+        }));
+    }
+    emit(state.copyWith(isLoading: false));
   }
 }
