@@ -50,7 +50,7 @@ class SplashPageCubit extends Cubit<SplashPageState> {
       return;
     }
 
-    final shouldShowOnboarding = true;
+    final shouldShowOnboarding = false;
      //_appPreferences.shouldShowOnboarding;
 
     if (shouldShowOnboarding) {
