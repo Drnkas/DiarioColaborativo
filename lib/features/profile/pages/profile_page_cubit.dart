@@ -1,44 +1,39 @@
 import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:diario_colaborativo/core/helpers/result.dart';
 import 'package:diario_colaborativo/features/auth/models/user.dart';
-import 'package:diario_colaborativo/features/profile/data/profile_service.dart';
+import 'package:diario_colaborativo/features/auth/session/session_cubit.dart';
+import 'package:diario_colaborativo/features/profile/data/profile_repository.dart';
 import 'package:diario_colaborativo/features/profile/pages/profile_page_state.dart';
 
 class ProfilePageCubit extends Cubit<ProfilePageState> {
-  final ProfileService _profileService;
-
   ProfilePageCubit({
-    required ProfileService profileService,
-  })  : _profileService = profileService,
+    required ProfileRepository profileRepository,
+    required SessionCubit sessionCubit,
+  })  : _profileRepository = profileRepository,
+        _sessionCubit = sessionCubit,
         super(const ProfilePageState());
 
-  /// Carrega o perfil do usuário
-  Future<void> loadUserProfile(String uid) async {
+  final ProfileRepository _profileRepository;
+  final SessionCubit _sessionCubit;
+
+  Future<void> loadUserProfile() async {
     emit(state.copyWith(status: ProfilePageStatus.loading));
 
-    try {
-      final user = await _profileService.getUserProfile(uid);
-      
-      if (user != null) {
-        emit(state.copyWith(
-          status: ProfilePageStatus.success,
-          user: user,
-        ));
-      } else {
+    final result = await _profileRepository.getUserProfile();
+
+    switch (result) {
+      case Success(object: final user):
+        emit(state.copyWith(status: ProfilePageStatus.success, user: user));
+      case Failure():
         emit(state.copyWith(
           status: ProfilePageStatus.error,
-          errorMessage: 'Usuário não encontrado',
+          errorMessage: 'Não foi possível carregar o perfil.',
         ));
-      }
-    } catch (e) {
-      emit(state.copyWith(
-        status: ProfilePageStatus.error,
-        errorMessage: e.toString(),
-      ));
     }
   }
 
-  /// Atualiza o perfil do usuário
   Future<void> updateProfile({
     String? displayName,
     String? bio,
@@ -49,38 +44,26 @@ class ProfilePageCubit extends Cubit<ProfilePageState> {
 
     emit(state.copyWith(status: ProfilePageStatus.loading));
 
-    try {
-      final updatedUser = await _profileService.updateProfileWithImages(
-        currentUser: state.user!,
-        displayName: displayName,
-        bio: bio,
-        profileImage: profileImage,
-        coverImage: coverImage,
-      );
+    final result = await _profileRepository.updateUserProfileWithImages(
+      displayName: displayName,
+      bio: bio,
+      profileImage: profileImage,
+      coverImage: coverImage,
+    );
 
-      emit(state.copyWith(
-        status: ProfilePageStatus.success,
-        user: updatedUser,
-      ));
-    } catch (e) {
-      emit(state.copyWith(
-        status: ProfilePageStatus.error,
-        errorMessage: e.toString(),
-      ));
+    switch (result) {
+      case Success(object: final user):
+        _sessionCubit.updateUser(user);
+        emit(state.copyWith(status: ProfilePageStatus.updated, user: user));
+      case Failure():
+        emit(state.copyWith(
+          status: ProfilePageStatus.error,
+          errorMessage: 'Não foi possível atualizar o perfil.',
+        ));
     }
   }
 
-  /// Muda a tab selecionada (Posts ou Salvos)
-  void changeTab(int tabIndex) {
-    emit(state.copyWith(selectedTab: tabIndex));
-  }
-
-  /// Define o usuário inicial (útil quando já tem o usuário em memória)
   void setUser(AppUser user) {
-    emit(state.copyWith(
-      status: ProfilePageStatus.success,
-      user: user,
-    ));
+    emit(state.copyWith(status: ProfilePageStatus.success, user: user));
   }
 }
-

@@ -79,7 +79,7 @@ class _EditProfileModalState extends State<EditProfileModal> {
 
   Future<void> _showImageSourceDialog(bool isCoverImage) async {
     final AppTheme t = AppTheme();
-    
+
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -107,8 +107,11 @@ class _EditProfileModalState extends State<EditProfileModal> {
                   _pickImage(ImageSource.gallery, isCoverImage);
                 },
               ),
-              if ((isCoverImage && (_coverImage != null || widget.user.coverImageUrl != null)) ||
-                  (!isCoverImage && (_profileImage != null || widget.user.photoUrl != null)))
+              if ((isCoverImage &&
+                      (_coverImage != null ||
+                          widget.user.coverImageUrl != null)) ||
+                  (!isCoverImage &&
+                      (_profileImage != null || widget.user.photoUrl != null)))
                 ListTile(
                   leading: const Icon(Icons.delete, color: Colors.red),
                   title: const Text('Remover imagem'),
@@ -234,7 +237,9 @@ class _EditProfileModalState extends State<EditProfileModal> {
                       Stack(
                         children: [
                           GestureDetector(
-                            onTap: _isLoading ? null : () => _showImageSourceDialog(true),
+                            onTap: _isLoading
+                                ? null
+                                : () => _showImageSourceDialog(true),
                             child: Container(
                               height: 150,
                               width: double.infinity,
@@ -247,14 +252,15 @@ class _EditProfileModalState extends State<EditProfileModal> {
                                       )
                                     : widget.user.coverImageUrl != null
                                         ? DecorationImage(
-                                            image: NetworkImage(widget.user.coverImageUrl!),
+                                            image: NetworkImage(
+                                                widget.user.coverImageUrl!),
                                             fit: BoxFit.cover,
                                           )
                                         : null,
                               ),
                               child: Container(
                                 color: Colors.black.withOpacity(0.3),
-                                child: Center(
+                                child: const Center(
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -263,7 +269,7 @@ class _EditProfileModalState extends State<EditProfileModal> {
                                         color: Colors.white,
                                         size: 32,
                                       ),
-                                      const SizedBox(height: 8),
+                                      SizedBox(height: 8),
                                       Text(
                                         'Editar capa',
                                         style: TextStyle(
@@ -286,7 +292,9 @@ class _EditProfileModalState extends State<EditProfileModal> {
                           child: Stack(
                             children: [
                               GestureDetector(
-                                onTap: _isLoading ? null : () => _showImageSourceDialog(false),
+                                onTap: _isLoading
+                                    ? null
+                                    : () => _showImageSourceDialog(false),
                                 child: Container(
                                   width: 100,
                                   height: 100,
@@ -304,12 +312,14 @@ class _EditProfileModalState extends State<EditProfileModal> {
                                           )
                                         : widget.user.photoUrl != null
                                             ? DecorationImage(
-                                                image: NetworkImage(widget.user.photoUrl!),
+                                                image: NetworkImage(
+                                                    widget.user.photoUrl!),
                                                 fit: BoxFit.cover,
                                               )
                                             : null,
                                   ),
-                                  child: _profileImage == null && widget.user.photoUrl == null
+                                  child: _profileImage == null &&
+                                          widget.user.photoUrl == null
                                       ? const Icon(
                                           Icons.person,
                                           color: Colors.white,
@@ -322,7 +332,9 @@ class _EditProfileModalState extends State<EditProfileModal> {
                                 right: 0,
                                 bottom: 0,
                                 child: GestureDetector(
-                                  onTap: _isLoading ? null : () => _showImageSourceDialog(false),
+                                  onTap: _isLoading
+                                      ? null
+                                      : () => _showImageSourceDialog(false),
                                   child: Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
@@ -368,15 +380,18 @@ class _EditProfileModalState extends State<EditProfileModal> {
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(color: t.primary, width: 2),
+                                  borderSide:
+                                      BorderSide(color: t.primary, width: 2),
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
                                 ),
                               ),
                               validator: (value) {
@@ -407,17 +422,21 @@ class _EditProfileModalState extends State<EditProfileModal> {
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(color: t.primary, width: 2),
+                                  borderSide:
+                                      BorderSide(color: t.primary, width: 2),
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
                                 ),
-                                counterText: '${_bioController.text.length}/150',
+                                counterText:
+                                    '${_bioController.text.length}/150',
                               ),
                               validator: (value) {
                                 if (value != null && value.length > 150) {
@@ -469,4 +488,3 @@ Future<bool?> showEditProfileModal({
     ),
   );
 }
-
