@@ -22,41 +22,33 @@ class _AppButtonState extends State<AppButton> {
       onPressed: widget.onPressed,
       style: ButtonStyle(
         backgroundColor: WidgetStateColor.resolveWith((states) {
-          if(states.contains(WidgetState.disabled)){
-            return t.light;
+          if (states.contains(WidgetState.disabled)) {
+            return t.darkPrimary.withAlpha(100);
           } else {
-            return t.primary;
+            return t.darkPrimary;
           }
         }),
         shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)
-            )
-        ),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
         minimumSize: WidgetStateProperty.all(const Size(128, 54)),
-        textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+        textStyle: WidgetStateProperty.all(
+            const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
         foregroundColor: WidgetStateColor.resolveWith((states) {
-          if(states.contains(WidgetState.disabled)){
+          if (states.contains(WidgetState.disabled)) {
             return t.lightGray;
           } else {
             return Colors.white;
           }
         }),
         elevation: const WidgetStatePropertyAll(0),
-        padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16)),
+        padding:
+            const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 16)),
       ),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            if (widget.icon != null)
-              const SizedBox(width: 24),
-
-            Expanded(child: Center(child: Text(widget.label))),
-
-            if (widget.icon != null)
-              widget.icon!,
-          ]
-      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        if (widget.icon != null) const SizedBox(width: 24),
+        Expanded(child: Center(child: Text(widget.label))),
+        if (widget.icon != null) widget.icon!,
+      ]),
     );
   }
 }

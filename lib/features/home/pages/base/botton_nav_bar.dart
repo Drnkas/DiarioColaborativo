@@ -23,19 +23,29 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
     final w = (MediaQuery.sizeOf(context).width - (5 * 48)) / 6;
 
+    const labels = ['Início', 'Agenda', 'Novo', 'Notificações', 'Perfil'];
+
     return SafeArea(
       top: false,
       child: SizedBox(
-        height: 74,
+        height: 88,
         child: Stack(
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 6),
-              decoration: const BoxDecoration(
+              margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+              decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(
+                borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(36),
+                  bottom: Radius.circular(36),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 12,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
               ),
               child: Stack(
                 children: [
@@ -45,14 +55,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     duration: const Duration(milliseconds: 300),
                     child: Container(
                       width: 48,
-                      height: 48,
+                      height: 42,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18),
                           color: t.primary.withOpacity(0.13)),
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -63,21 +73,35 @@ class _BottomNavBarState extends State<BottomNavBar> {
                                     widget.onChanged(i);
                                   }
                                 : null,
-                            child: Container(
+                            child: SizedBox(
                               width: 48,
-                              height: 48,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.transparent),
-                              child: Icon(
-                                [
-                                  Icons.home,
-                                  Icons.calendar_month,
-                                  Icons.add,
-                                  Icons.notifications_none,
-                                  Icons.account_circle_outlined
-                                ][i],
-                                color: widget.page == i ? t.primary : t.black,
+                              height: 44,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    [
+                                      Icons.home,
+                                      Icons.calendar_month,
+                                      Icons.add,
+                                      Icons.notifications_none,
+                                      Icons.account_circle_outlined
+                                    ][i],
+                                    size: 24,
+                                    color: widget.page == i ? t.primary : t.textSubtitle,
+                                  ),
+                                  //const SizedBox(height: 2),
+                                  //  Text(
+                                  //  labels[i],
+                                  //  style: TextStyle(
+                                  //   fontSize: 10,
+                                  //   color: widget.page == i
+                                  //      ? t.primary
+                                  //      : t.textSubtitle,
+                                  //   ),
+                                  //   ),
+                                ],
                               ),
                             ),
                           )

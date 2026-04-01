@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-class AppTheme{
-  final bg = const Color(0xfffafafa);
+class AppTheme {
+  final bg = const Color(0xFFFFF5FB);
   final primary = const Color(0xFFFFB6B9);
   final darkPrimary = const Color(0xFFCBAACB);
+  final darkDetails = const Color(0xFF875387);
   final secondary = const Color(0xFFDFF5E1);
   final light = const Color(0xFFc9e7e8);
   final details = const Color(0xFFFFF1B6);
@@ -13,6 +14,8 @@ class AppTheme{
   final success = const Color(0xFF86D185).withAlpha(180);
   final sucessSnackbar = const Color(0xFF86D185).withAlpha(180);
   final gray = const Color(0xffB6C5D1);
+  final inputBackground = const Color(0xFFFFB6B9).withAlpha(80);
+  final inputBorder = const Color(0xFFE89598); // rosa escuro leve
 
   static const kAppGradient = LinearGradient(
     begin: Alignment.topRight,
@@ -78,16 +81,16 @@ class AppTheme{
     fontWeight: FontWeight.bold,
   );
 
-  static const text = Color(0xFF475467);
-  static const priceText = Color(0xFF3A3A40);
-  static const priceSubtitle = Color(0xFF495057);
-  static const inputText = Color(0xFF667085);
-  static const greyButton = Color(0xFF868E96);
-  static const selectedFilter = Color(0xFFCED4DA);
+  final text = Color(0xFF475467);
+  final darkText = Color(0xFF3A3A40);
+  final textSubtitle = Color(0xFF495057);
+  final inputText = Color(0xFF667085);
+  final greyButton = Color(0xFF868E96);
+  final selectedFilter = Color(0xFFCED4DA);
 
-  static const warning = Color(0xFFFFAE0D);
-  static const background = Color(0xFFFAFAFA);
-  static const backgroundCard = Color(0xFFF8F9FA);
-  static const backgroundButton = Color(0xFFDEE2E6);
-  static const lightest = Color(0xFFFFF4ED);
+  final warning = Color(0xFFFFAE0D);
+  final background = Color(0xFFFAFAFA);
+  final backgroundCard = Color(0xFFF8F9FA);
+  final backgroundButton = Color(0xFFDEE2E6);
+  final lightest = Color(0xFFFFF4ED);
 }

@@ -39,7 +39,11 @@ class _AppTextFieldState extends State<AppTextField> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
-        color: t.lightGray,
+        color: t.inputBackground,
+        border: Border.all(
+          color: t.inputBorder,
+          width: 1,
+        ),
       ),
       child: Row(
         children: [
@@ -70,18 +74,16 @@ class _AppTextFieldState extends State<AppTextField> {
                 TextFormField(
                   initialValue: widget.initialText,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: Colors.pink,
-                      ),
-                        borderRadius: BorderRadius.circular(12),
-                    ),
-                    fillColor: Colors.white,
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    focusedErrorBorder: InputBorder.none,
+                    fillColor: Colors.transparent,
                     contentPadding: const EdgeInsets.fromLTRB(20, 6, 20, 14),
                     isCollapsed: true,
                     hintText: widget.hint,
-                    hintStyle: t.field15.copyWith(color: t.gray),
+                    hintStyle: t.field15.copyWith(color: t.black),
                   ),
                   style: t.field15,
                   onChanged: widget.onChanged,
@@ -109,7 +111,7 @@ class _AppTextFieldState extends State<AppTextField> {
                   },
                   icon: Icon(
                       hidePassword ? Icons.visibility : Icons.visibility_off),
-                  color: t.gray,
+                  color: t.darkPrimary,
                 ),
               ),
             ),

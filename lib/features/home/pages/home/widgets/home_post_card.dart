@@ -66,7 +66,7 @@ class HomePostCard extends StatelessWidget {
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: AssetImage('assets/images/onboarding_2.png'),
+                      image: AssetImage('assets/images/logo_rosa.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -148,4 +148,3 @@ class HomePostCard extends StatelessWidget {
     );
   }
 }
-

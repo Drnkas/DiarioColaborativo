@@ -47,13 +47,16 @@ class App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           routerConfig: router,
           builder: (context, widget) {
-            final newChild = Stack(
-              children: [
-                if (widget != null) widget,
-                const AlertArea(),
-              ],
+            return KeyedSubtree(
+              key: const ValueKey('app_root'),
+              child: Stack(
+                children: [
+                  if (widget != null) widget,
+                  const AlertArea(),
+                ],
+              ),
             );
-return newChild;
+
             // return ResponsiveBreakpoints.builder(
             //   child: newChild,
             //   breakpoints: [
@@ -67,7 +70,7 @@ return newChild;
             // );
           },
           theme: ThemeData.light().copyWith(
-            scaffoldBackgroundColor: Colors.white,
+            scaffoldBackgroundColor: const Color(0xFFFFF5FB),
           ),
         ),
       ),
