@@ -10,11 +10,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../../../core/helpers/result.dart';
 
 abstract class AuthDatasource {
-  Future<Result<LoginFailed, AppUser>> login({required String email, required String password});
+  Future<Result<LoginFailed, AppUser>> login(
+      {required String email, required String password});
   Future<Result<ValidateTokenFailed, AppUser>> validateToken(String token);
   Future<Result<SignUpFailed, AppUser>> signUp(SignUpDto signUpDto);
-  // Future<Result<LoginFailed, AppUser>> signInWithGoogle();
-  Future<Result<LoginFailed, AppUser>> signInWithApple();
+  Future<Result<LoginFailed, AppUser>> signInWithGoogle();
+  // Future<Result<LoginFailed, AppUser>> signInWithApple();
   Future<void> signOut();
 }
 
@@ -51,9 +52,11 @@ class RemoteAuthDatasource implements AuthDatasource {
   }
 
   @override
-  Future<Result<LoginFailed, AppUser>> login({required String email, required String password}) async {
+  Future<Result<LoginFailed, AppUser>> login(
+      {required String email, required String password}) async {
     try {
-      final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      final credential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
 
       if (credential.user != null) {
         final user = AppUser.fromFirebaseUser(credential.user!);
@@ -68,7 +71,8 @@ class RemoteAuthDatasource implements AuthDatasource {
     } on FirebaseAuthException catch (e) {
       return _mapFirebaseAuthExceptionToLoginFailed(e);
     } catch (e) {
-      if (e.toString().contains('network') || e.toString().contains('connection')) {
+      if (e.toString().contains('network') ||
+          e.toString().contains('connection')) {
         return const Failure(LoginFailed.offline);
       }
       return const Failure(LoginFailed.unknownError);
@@ -78,8 +82,8 @@ class RemoteAuthDatasource implements AuthDatasource {
   @override
   Future<Result<SignUpFailed, AppUser>> signUp(SignUpDto signUpDto) async {
     try {
-      final credential =
-          await _auth.createUserWithEmailAndPassword(email: signUpDto.email, password: signUpDto.password);
+      final credential = await _auth.createUserWithEmailAndPassword(
+          email: signUpDto.email, password: signUpDto.password);
 
       if (credential.user != null) {
         await credential.user!.updateDisplayName(signUpDto.fullName);
@@ -101,7 +105,8 @@ class RemoteAuthDatasource implements AuthDatasource {
   }
 
   @override
-  Future<Result<ValidateTokenFailed, AppUser>> validateToken(String token) async {
+  Future<Result<ValidateTokenFailed, AppUser>> validateToken(
+      String token) async {
     try {
       final currentUser = _auth.currentUser;
 
@@ -110,7 +115,8 @@ class RemoteAuthDatasource implements AuthDatasource {
 
         // Tenta buscar do Firestore primeiro para ter dados atualizados
         try {
-          final doc = await _firestore.collection('users').doc(currentUser.uid).get();
+          final doc =
+              await _firestore.collection('users').doc(currentUser.uid).get();
           if (doc.exists) {
             final user = AppUser.fromMap(doc.data()!);
             return Success(user);
@@ -134,21 +140,44 @@ class RemoteAuthDatasource implements AuthDatasource {
     }
   }
 
+  @override
+  Future<Result<LoginFailed, AppUser>> signInWithGoogle() async {
+    try {
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        return const Failure(LoginFailed.cancelled);
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await _auth.signInWithCredential(credential);
+
+      if (userCredential.user != null) {
+        final user = AppUser.fromFirebaseUser(userCredential.user!);
+
+        // Cria ou atualiza o documento do usuário no Firestore
+        await _createOrUpdateUserInFirestore(user);
+
+        return Success(user);
+      } else {
+        return const Failure(LoginFailed.invalidCredentials);
+      }
+    } on FirebaseAuthException catch (e) {
+      return _mapFirebaseAuthExceptionToLoginFailed(e);
+    } catch (e) {
+      return const Failure(LoginFailed.unknownError);
+    }
+  }
+
   // @override
-  // Future<Result<LoginFailed, AppUser>> signInWithGoogle() async {
+  // Future<Result<LoginFailed, AppUser>> signInWithApple() async {
   //   try {
-  //     final googleUser = await _googleSignIn.signOut();
-  //     if (googleUser == null) {
-  //       return const Failure(LoginFailed.invalidCredentials);
-  //     }
-
-  //     final googleAuth = await googleUser.authentication;
-  //     final credential = GoogleAuthProvider.credential(
-  //       accessToken: googleAuth.accessToken,
-  //       idToken: googleAuth.idToken,
-  //     );
-
-  //     final userCredential = await _auth.signInWithCredential(credential);
+  //     final appleProvider = AppleAuthProvider();
+  //     final userCredential = await _auth.signInWithProvider(appleProvider);
 
   //     if (userCredential.user != null) {
   //       final user = AppUser.fromFirebaseUser(userCredential.user!);
@@ -168,29 +197,6 @@ class RemoteAuthDatasource implements AuthDatasource {
   // }
 
   @override
-  Future<Result<LoginFailed, AppUser>> signInWithApple() async {
-    try {
-      final appleProvider = AppleAuthProvider();
-      final userCredential = await _auth.signInWithProvider(appleProvider);
-
-      if (userCredential.user != null) {
-        final user = AppUser.fromFirebaseUser(userCredential.user!);
-
-        // Cria ou atualiza o documento do usuário no Firestore
-        await _createOrUpdateUserInFirestore(user);
-
-        return Success(user);
-      } else {
-        return const Failure(LoginFailed.invalidCredentials);
-      }
-    } on FirebaseAuthException catch (e) {
-      return _mapFirebaseAuthExceptionToLoginFailed(e);
-    } catch (e) {
-      return const Failure(LoginFailed.unknownError);
-    }
-  }
-
-  @override
   Future<void> signOut() async {
     await Future.wait([
       _auth.signOut(),
@@ -198,12 +204,15 @@ class RemoteAuthDatasource implements AuthDatasource {
     ]);
   }
 
-  Result<LoginFailed, AppUser> _mapFirebaseAuthExceptionToLoginFailed(FirebaseAuthException e) {
+  Result<LoginFailed, AppUser> _mapFirebaseAuthExceptionToLoginFailed(
+      FirebaseAuthException e) {
     switch (e.code) {
       case 'user-not-found':
       case 'wrong-password':
       case 'invalid-credential':
         return const Failure(LoginFailed.invalidCredentials);
+      case 'account-exists-with-different-credential':
+        return const Failure(LoginFailed.accountExistsWithDifferentCredential);
       case 'network-request-failed':
       case 'too-many-requests':
         return const Failure(LoginFailed.offline);
@@ -212,7 +221,8 @@ class RemoteAuthDatasource implements AuthDatasource {
     }
   }
 
-  Result<SignUpFailed, AppUser> _mapFirebaseAuthExceptionToSignUpFailed(FirebaseAuthException e) {
+  Result<SignUpFailed, AppUser> _mapFirebaseAuthExceptionToSignUpFailed(
+      FirebaseAuthException e) {
     switch (e.code) {
       case 'email-already-in-use':
         return const Failure(SignUpFailed.emailAlreadyExists);

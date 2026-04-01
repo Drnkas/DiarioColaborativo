@@ -20,7 +20,8 @@ class OnboardingPage extends StatefulWidget {
   State<OnboardingPage> createState() => _OnboardingPageState();
 }
 
-class _OnboardingPageState extends State<OnboardingPage> implements OnboardingPageActions{
+class _OnboardingPageState extends State<OnboardingPage>
+    implements OnboardingPageActions {
   final PageController pageController = PageController();
   late OnboardingPageCubit cubit = OnboardingPageCubit(this);
 
@@ -32,7 +33,6 @@ class _OnboardingPageState extends State<OnboardingPage> implements OnboardingPa
     cubit.initialize();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final AppTheme t = context.watch();
@@ -42,37 +42,34 @@ class _OnboardingPageState extends State<OnboardingPage> implements OnboardingPa
       child: Scaffold(
         body: BlocBuilder<OnboardingPageCubit, OnboardingPageState>(
           builder: (context, state) {
-
             final pages = [
               OnboardingPageInfo(
                 title: 'Seja Bem-vindo(a)!',
                 body:
-                'Você poderá encontrar profissionais em sua região e agendar uma consulta com poucos cliques.',
-               imagePath: 'assets/logo_rosa.png',
+                    'Este é um diário colaborativo! Um espaço acolhedor para reflexões com suas amigas, ou apenas para você mesma.',
+                imagePath: 'assets/images/onboarding_1.png',
               ),
-              if(state.showLocationPage)
-                OnboardingPageInfo(
-                    title: 'Acesso à\n localização',
-                    body: 'Para facilitar a busca de profissionais em sua região.',
-                    imagePath: 'assets/logo_rosa.png',
-                    onNextPressed: cubit.requestLocationPermission
-                ),
-              if(state.showNotificationPage)
+              // if (state.showLocationPage)
+              //   OnboardingPageInfo(
+              //       title: 'Acesso à\n localização',
+              //       body:
+              //           '',
+              //       imagePath: 'assets/images/logo_rosa.png',
+              //       onNextPressed: cubit.requestLocationPermission),
+              if (state.showNotificationPage)
                 OnboardingPageInfo(
                     title: 'Ative as\n notificações',
                     body:
-                    'Para receber avisos importantes sobre os seus agendamentos.',
-                    imagePath: 'assets/logo_rosa.png',
-                    onNextPressed: cubit.requestNotificationPermission
-                ),
+                        'Fique por dentro das notificações de amigos ou novidades.',
+                    imagePath: 'assets/images/onboarding_2.png',
+                    onNextPressed: cubit.requestNotificationPermission),
               OnboardingPageInfo(
-                  title: 'Agende uma\n consulta',
+                  title: 'Acesse agora',
                   body:
-                  'Você poderá encontrar profissionais em sua região e agendar uma consulta com poucos cliques.',
-                  imagePath: 'assets/logo_rosa.png',
+                      'E comece uma jornada de autoconhecimento e reflexão com suas amigas.',
+                  imagePath: 'assets/images/logo_rosa.png',
                   onNextPressed: cubit.finish,
-                  customLabel: 'Finalizar'
-              ),
+                  customLabel: 'Finalizar'),
             ];
 
             return Column(
@@ -141,23 +138,23 @@ class _OnboardingPageState extends State<OnboardingPage> implements OnboardingPa
 
   @override
   Future<void> showDeniedForeverDialog() {
-    return showDialog(context: context, builder: (_) => AppAlertDialog(
-        title: 'Autorização negada',
-        body: 'Você não autorizou esta permissão. Acesse as configurações do seu dispositivo para permitir.',
-        actions: [
-          AppOutlinedButton(
-              label: 'Prosseguir mesmo assim',
-              onPressed: Navigator.of(context).pop
-          ),
-          AppButton(
-              label: 'Ir para as configurações',
-              onPressed: () async {
-                await getIt<AppDeviceSettings>().openSettings();
-                if(context.mounted) Navigator.of(context).pop();
-              }
-          )
-        ]
-    ));
+    return showDialog(
+        context: context,
+        builder: (_) => AppAlertDialog(
+                title: 'Autorização negada',
+                body:
+                    'Você não autorizou esta permissão. Acesse as configurações do seu dispositivo para permitir.',
+                actions: [
+                  AppOutlinedButton(
+                      label: 'Prosseguir mesmo assim',
+                      onPressed: Navigator.of(context).pop),
+                  AppButton(
+                      label: 'Ir para as configurações',
+                      onPressed: () async {
+                        await getIt<AppDeviceSettings>().openSettings();
+                        if (context.mounted) Navigator.of(context).pop();
+                      })
+                ]));
   }
 
   @override

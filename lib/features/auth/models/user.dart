@@ -11,6 +11,7 @@ class AppUser {
   final DateTime createdAt;
   final int followersCount;
   final int followingCount;
+  final int postsCount;
 
   const AppUser({
     required this.uid,
@@ -23,6 +24,7 @@ class AppUser {
     required this.createdAt,
     required this.followersCount,
     required this.followingCount,
+    required this.postsCount,
   });
 
   factory AppUser.fromMap(Map<String, dynamic> map) {
@@ -37,6 +39,7 @@ class AppUser {
       createdAt: DateTime.parse(map['createdAt'] as String),
       followersCount: map['followersCount'] as int? ?? 0,
       followingCount: map['followingCount'] as int? ?? 0,
+      postsCount: map['postsCount'] as int? ?? 0,
     );
   }
 
@@ -52,6 +55,7 @@ class AppUser {
       createdAt: DateTime.now(),
       followersCount: 0,
       followingCount: 0,
+      postsCount: 0,
     );
   }
 
@@ -67,6 +71,7 @@ class AppUser {
       'createdAt': createdAt.toIso8601String(),
       'followersCount': followersCount,
       'followingCount': followingCount,
+      'postsCount': postsCount,
     };
   }
 
@@ -82,6 +87,7 @@ class AppUser {
       'createdAt': createdAt.toIso8601String(),
       'followersCount': followersCount,
       'followingCount': followingCount,
+      'postsCount': postsCount,
     };
   }
 
@@ -96,6 +102,7 @@ class AppUser {
     DateTime? createdAt,
     int? followersCount,
     int? followingCount,
+    int? postsCount,
   }) {
     return AppUser(
       uid: uid ?? this.uid,
@@ -108,12 +115,13 @@ class AppUser {
       createdAt: createdAt ?? this.createdAt,
       followersCount: followersCount ?? this.followersCount,
       followingCount: followingCount ?? this.followingCount,
+      postsCount: postsCount ?? this.postsCount,
     );
   }
 
   @override
   String toString() {
-    return 'AppUser(uid: $uid, name: $name, email: $email, bio: $bio)';
+    return 'AppUser(uid: $uid, name: $name, email: $email, bio: $bio, followersCount: $followersCount, followingCount: $followingCount, postsCount: $postsCount)';
   }
 
   @override

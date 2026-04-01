@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:diario_colaborativo/core/helpers/result.dart';
+import 'package:diario_colaborativo/features/auth/session/session_cubit.dart';
 import 'package:diario_colaborativo/features/intro/pages/splash/splash_page_actions.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../../../core/device/app_package_info.dart';
 import '../../../../core/device/app_preferences.dart';
@@ -18,11 +19,11 @@ class SplashPageCubit extends Cubit<SplashPageState> {
     AppRemoteConfig? appRemoteConfig,
     AppPackageInfo? appPackageInfo,
     AppPreferences? appPreferences,
-    // SessionCubit? sessionCubit,
+    SessionCubit? sessionCubit,
   })  : _appRemoteConfig = appRemoteConfig ?? getIt(),
         _appPackageInfo = appPackageInfo ?? getIt(),
         _appPreferences = appPreferences ?? getIt(),
-        // _sessionCubit = sessionCubit ?? getIt(),
+        _sessionCubit = sessionCubit ?? getIt(),
         super(const SplashPageState());
 
   SplashPageActions? _actions;
@@ -30,7 +31,7 @@ class SplashPageCubit extends Cubit<SplashPageState> {
   final AppRemoteConfig _appRemoteConfig;
   final AppPackageInfo _appPackageInfo;
   final AppPreferences _appPreferences;
-  //final SessionCubit _sessionCubit;
+  final SessionCubit _sessionCubit;
 
   Future<void> initialize() async {
     final results = await Future.wait([
@@ -50,8 +51,7 @@ class SplashPageCubit extends Cubit<SplashPageState> {
       return;
     }
 
-    final shouldShowOnboarding = false;
-     //_appPreferences.shouldShowOnboarding;
+    final shouldShowOnboarding = _appPreferences.shouldShowOnboarding;
 
     if (shouldShowOnboarding) {
       _actions?.navToOnboarding();
@@ -83,9 +83,8 @@ class SplashPageCubit extends Cubit<SplashPageState> {
   }
 
   Future<bool> _checkLoggedUser() async {
-    // final result =  await _sessionCubit.validateToken();
-    // return result is Success;
-    return true;
+    final result = await _sessionCubit.validateToken();
+    return result is Success;
   }
 
   void dispose() {

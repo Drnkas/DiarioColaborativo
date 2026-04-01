@@ -53,10 +53,34 @@ class LoginPageCubit extends Cubit<LoginPageState> {
     emit(state.copyWith(password: Password.dirty(value, false)));
   }
 
-  // Future<void> onGoogleLoginPressed() async {
+  Future<void> onGoogleLoginPressed() async {
+    emit(state.copyWith(isLoading: true));
+
+    final result = await _sessionCubit.signInWithGoogle();
+
+    switch (result) {
+      case Success():
+        _actions.navToHome();
+      case Failure(error: final error):
+        if (error == LoginFailed.cancelled) return;
+        _alertAreaCubit.showAlert(Alert.error(
+            title: switch (error) {
+          LoginFailed.accountExistsWithDifferentCredential =>
+            'Este e-mail já está cadastrado com outro método. Use e-mail e senha para entrar.',
+          LoginFailed.invalidCredentials => 'Falha na autenticação com Google.',
+          LoginFailed.offline =>
+            'Verifique sua conexão com a internet e tente novamente.',
+          _ =>
+            'Falha ao realizar o login com Google. Por favor tente novamente.'
+        }));
+    }
+    emit(state.copyWith(isLoading: false));
+  }
+
+  // Future<void> onAppleLoginPressed() async {
   //   emit(state.copyWith(isLoading: true));
 
-  //   final result = await _sessionCubit.signInWithGoogle();
+  //   final result = await _sessionCubit.signInWithApple();
 
   //   switch (result) {
   //     case Success():
@@ -64,33 +88,12 @@ class LoginPageCubit extends Cubit<LoginPageState> {
   //     case Failure(error: final error):
   //       _alertAreaCubit.showAlert(Alert.error(
   //           title: switch (error) {
-  //         LoginFailed.invalidCredentials => 'Falha na autenticação com Google.',
+  //         LoginFailed.invalidCredentials => 'Falha na autenticação com Apple.',
   //         LoginFailed.offline =>
   //           'Verifique sua conexão com a internet e tente novamente.',
-  //         _ =>
-  //           'Falha ao realizar o login com Google. Por favor tente novamente.'
+  //         _ => 'Falha ao realizar o login com Apple. Por favor tente novamente.'
   //       }));
   //   }
   //   emit(state.copyWith(isLoading: false));
   // }
-
-  Future<void> onAppleLoginPressed() async {
-    emit(state.copyWith(isLoading: true));
-
-    final result = await _sessionCubit.signInWithApple();
-
-    switch (result) {
-      case Success():
-        _actions.navToHome();
-      case Failure(error: final error):
-        _alertAreaCubit.showAlert(Alert.error(
-            title: switch (error) {
-          LoginFailed.invalidCredentials => 'Falha na autenticação com Apple.',
-          LoginFailed.offline =>
-            'Verifique sua conexão com a internet e tente novamente.',
-          _ => 'Falha ao realizar o login com Apple. Por favor tente novamente.'
-        }));
-    }
-    emit(state.copyWith(isLoading: false));
-  }
 }

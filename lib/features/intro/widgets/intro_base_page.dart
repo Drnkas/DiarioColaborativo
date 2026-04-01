@@ -15,6 +15,8 @@ class IntroBasePage extends StatelessWidget {
   final String title;
   final String body;
 
+  bool get _isSvg => imagePath.toLowerCase().endsWith('.svg');
+
   @override
   Widget build(BuildContext context) {
     final AppTheme t = context.watch();
@@ -29,9 +31,9 @@ class IntroBasePage extends StatelessWidget {
             child: Center(
               child: SizedBox(
                 height: 290,
-                child: SvgPicture.asset(
-                  imagePath,
-                ),
+                child: _isSvg
+                    ? SvgPicture.asset(imagePath)
+                    : Image.asset(imagePath, fit: BoxFit.contain),
               ),
             ),
           ),

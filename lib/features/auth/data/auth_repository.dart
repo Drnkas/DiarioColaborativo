@@ -41,18 +41,8 @@ class AuthRepository {
     return _datasource.validateToken(token);
   }
 
-  // Future<Result<LoginFailed, AppUser>> signInWithGoogle() async {
-  //   final result = await _datasource.signInWithGoogle();
-
-  //   if (result case Success(object: final user)) {
-  //     await _appSecureStorage.saveSessionToken(user.uid);
-  //   }
-
-  //   return result;
-  // }
-
-  Future<Result<LoginFailed, AppUser>> signInWithApple() async {
-    final result = await _datasource.signInWithApple();
+  Future<Result<LoginFailed, AppUser>> signInWithGoogle() async {
+    final result = await _datasource.signInWithGoogle();
 
     if (result case Success(object: final user)) {
       await _appSecureStorage.saveSessionToken(user.uid);
@@ -60,6 +50,16 @@ class AuthRepository {
 
     return result;
   }
+
+  // Future<Result<LoginFailed, AppUser>> signInWithApple() async {
+  //   final result = await _datasource.signInWithApple();
+
+  //   if (result case Success(object: final user)) {
+  //     await _appSecureStorage.saveSessionToken(user.uid);
+  //   }
+
+  //   return result;
+  // }
 
   Future<void> logout() async {
     await _datasource.signOut();

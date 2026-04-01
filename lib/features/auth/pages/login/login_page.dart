@@ -30,14 +30,13 @@ class _LoginPageState extends State<LoginPage> implements LoginPageActions {
       child: BlocBuilder<LoginPageCubit, LoginPageState>(
           builder: (context, state) {
         return AppBasePage(
-          title: 'Login',
           isLoading: state.isLoading,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // const Center(
-              //   child: AppLogo(),
-              // ),
+              Center(
+                child: Image.asset('assets/images/logo_rosa.png'),
+              ),
               const SizedBox(height: 10),
               Text(
                 'Bem vindo(a) de volta!',
@@ -105,19 +104,19 @@ class _LoginPageState extends State<LoginPage> implements LoginPageActions {
                 onPressed: state.isLoading
                     ? null
                     : () {
-                        // context.read<LoginPageCubit>().onGoogleLoginPressed();
+                        context.read<LoginPageCubit>().onGoogleLoginPressed();
                       },
                 isLoading: state.isLoading,
               ),
               const SizedBox(height: 12),
-              AppAppleButton(
-                onPressed: state.isLoading
-                    ? null
-                    : () {
-                        context.read<LoginPageCubit>().onAppleLoginPressed();
-                      },
-                isLoading: state.isLoading,
-              ),
+              // AppAppleButton(
+              //   onPressed: state.isLoading
+              //       ? null
+              //       : () {
+              //           context.read<LoginPageCubit>().onAppleLoginPressed();
+              //         },
+              //   isLoading: state.isLoading,
+              // ),
             ],
           ),
         );

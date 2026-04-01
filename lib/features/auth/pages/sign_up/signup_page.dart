@@ -29,7 +29,6 @@ class _SignUpPageState extends State<SignUpPage> implements SignUpActions {
       create: (context) => SignUpCubit(this),
       child: BlocBuilder<SignUpCubit, SignUpState>(builder: (context, state) {
         return AppBasePage(
-          title: 'Criar conta',
           isLoading: state.isLoading,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -51,7 +50,8 @@ class _SignUpPageState extends State<SignUpPage> implements SignUpActions {
                 onChanged: context.read<SignUpCubit>().onFullNameChanged,
                 error: switch (state.fullName.displayError) {
                   FullNameValidationError.empty => 'Campo obrigatório',
-                  FullNameValidationError.incomplete => 'Informe seu nome completo',
+                  FullNameValidationError.incomplete =>
+                    'Informe seu nome completo',
                   _ => null,
                 },
               ),

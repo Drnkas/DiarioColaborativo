@@ -19,8 +19,10 @@ class SessionCubit extends Cubit<SessionState> {
 
   final AuthRepository _authRepository;
 
-  Future<Result<LoginFailed, AppUser>> login({required String email, required String password}) async {
-    final result = await _authRepository.login(email: email, password: password);
+  Future<Result<LoginFailed, AppUser>> login(
+      {required String email, required String password}) async {
+    final result =
+        await _authRepository.login(email: email, password: password);
 
     if (result case Success(object: final user)) {
       emit(state.copyWith(loggedUser: user));
@@ -47,18 +49,8 @@ class SessionCubit extends Cubit<SessionState> {
     return result;
   }
 
-  // Future<Result<LoginFailed, AppUser>> signInWithGoogle() async {
-  //   final result = await _authRepository.signInWithGoogle();
-
-  //   if (result case Success(object: final user)) {
-  //     emit(state.copyWith(loggedUser: user));
-  //   }
-
-  //   return result;
-  // }
-
-  Future<Result<LoginFailed, AppUser>> signInWithApple() async {
-    final result = await _authRepository.signInWithApple();
+  Future<Result<LoginFailed, AppUser>> signInWithGoogle() async {
+    final result = await _authRepository.signInWithGoogle();
 
     if (result case Success(object: final user)) {
       emit(state.copyWith(loggedUser: user));
@@ -66,6 +58,16 @@ class SessionCubit extends Cubit<SessionState> {
 
     return result;
   }
+
+  // Future<Result<LoginFailed, AppUser>> signInWithApple() async {
+  //   final result = await _authRepository.signInWithApple();
+
+  //   if (result case Success(object: final user)) {
+  //     emit(state.copyWith(loggedUser: user));
+  //   }
+
+  //   return result;
+  // }
 
   Future<void> logout() async {
     // não utiliza copyWith pois se o estado é null considera como usuário logado,
