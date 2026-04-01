@@ -1,5 +1,10 @@
+import 'package:diario_colaborativo/di/di.dart';
+import 'package:diario_colaborativo/features/diary/diary_cubit/diary_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/route/app_routes.dart';
 import '../../../profile/pages/profile_page.dart';
 import '../home/home_page.dart';
 import 'botton_nav_bar.dart';
@@ -19,10 +24,16 @@ class _BasePageState extends State<BasePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavBar(
+    return BlocProvider.value(
+      value: getIt<DiaryCubit>(),
+      child: Scaffold(
+        bottomNavigationBar: BottomNavBar(
         page: page,
         onChanged: (p) {
+          if (p == 2) {
+            context.push(AppRoutes.createpost);
+            return;
+          }
           setState(() {
             page = p;
           });
@@ -52,6 +63,6 @@ class _BasePageState extends State<BasePage> {
           const ProfilePage(),
         ],
       ),
-    );
+    ));
   }
 }
