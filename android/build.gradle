@@ -1,12 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.8.22'
+    ext.kotlin_version = '2.1.0'
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.android.tools.build:gradle:8.0.2'
         classpath 'com.google.gms:google-services:4.4.2'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
     }
@@ -27,11 +26,11 @@ subprojects {
 
 subprojects {
     project.evaluationDependsOn(":app")
-
-    // Forçar resolução das versões Kotlin para evitar conflitos de duplicação
+    
     configurations.all {
         resolutionStrategy {
             force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+            force "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
             force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
             force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
         }
