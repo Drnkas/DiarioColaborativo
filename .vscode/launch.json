@@ -14,27 +14,19 @@
             "name": "DiarioColaborativo (dev)",
             "request": "launch",
             "type": "dart",
-            "args": ["--flavor", "dev"]
+            "args": [
+                "--flavor",
+                "dev"
+            ]
         },
         {
             "name": "DiarioColaborativo (prod)",
             "request": "launch",
             "type": "dart",
-            "args": ["--flavor", "prod"]
-        },
-        {
-            "name": "DiarioColaborativo (dev profile)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile",
-            "args": ["--flavor", "dev"]
-        },
-        {
-            "name": "DiarioColaborativo (prod release)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release",
-            "args": ["--flavor", "prod"]
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         }
     ]
 }
