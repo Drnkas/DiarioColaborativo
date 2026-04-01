@@ -1,6 +1,7 @@
 import 'package:diario_colaborativo/core/widgets/app_text_button.dart';
 import 'package:diario_colaborativo/features/intro/widgets/intro_base_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/alert/alert_area_cubit.dart';
 import '../../../../di/di.dart';
@@ -29,15 +30,7 @@ class NotFoundPage extends StatelessWidget {
               child: AppTextButton(
                 label: 'Voltar',
                 onPressed: () {
-                  getIt<AlertAreaCubit>().showAlert(
-                    Alert.success(title: 'Este é um alerta legal! $count'),
-
-                  );
-                  getIt<AlertAreaCubit>().showAlert(
-                    Alert.error(title: 'Este é um alerta legal! $count'),
-
-                  );
-                  count++;
+                  context.pop();
                 },
               ),
             ),
