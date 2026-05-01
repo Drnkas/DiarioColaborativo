@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:diario_colaborativo/di/di.dart';
 import 'package:diario_colaborativo/features/auth/data/auth_repository.dart';
+import 'package:diario_colaborativo/features/diary/diary_cubit/diary_comments_cubit.dart';
+import 'package:diario_colaborativo/features/diary/diary_cubit/diary_cubit.dart';
 import 'package:diario_colaborativo/features/auth/data/results/sign_up_failed.dart';
 import 'package:diario_colaborativo/features/auth/models/sign_up_dto.dart';
 import 'package:equatable/equatable.dart';
@@ -70,10 +72,10 @@ class SessionCubit extends Cubit<SessionState> {
   // }
 
   Future<void> logout() async {
-    // não utiliza copyWith pois se o estado é null considera como usuário logado,
-    // sendo assim, é gerado um novo estado de SessionState
     await _authRepository.logout();
     emit(const SessionState(loggedUser: null));
+    getIt<DiaryCommentsCubit>().clearAllCaches();
+    getIt<DiaryCubit>().clearUserCaches();
   }
 
   /// Atualiza os dados do usuário logado

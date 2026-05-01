@@ -1,4 +1,5 @@
 import 'package:diario_colaborativo/core/route/app_routes.dart';
+import 'package:diario_colaborativo/core/widgets/app_loading_overlay.dart';
 import 'package:diario_colaborativo/di/di.dart';
 import 'package:diario_colaborativo/features/diary/diary_cubit/diary_cubit.dart';
 import 'package:diario_colaborativo/features/diary/diary_cubit/diary_state.dart';
@@ -32,13 +33,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         return Scaffold(
             body: SafeArea(
               bottom: false,
-              child: Column(
-                children: [
-                  // const HomeHeaderSection(),
-                  Expanded(
-                    child: state.isLoading && state.entries.isEmpty
-                        ? const Center(child: CircularProgressIndicator())
-                        : ListView.separated(
+              child: AppLoadingOverlay(
+                isLoading: state.isLoading && state.entries.isEmpty,
+                child: ListView.separated(
                             padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                             itemBuilder: (context, index) {
                               if (index == 0) {
@@ -64,8 +61,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                                 const SizedBox(height: 16),
                             itemCount: state.entries.length + 1,
                           ),
-                  ),
-                ],
               ),
             ),
           );

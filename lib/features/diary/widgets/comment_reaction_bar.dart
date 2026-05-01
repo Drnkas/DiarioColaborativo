@@ -1,7 +1,7 @@
 import 'package:diario_colaborativo/core/theme/app_theme.dart';
 import 'package:diario_colaborativo/di/di.dart';
 import 'package:diario_colaborativo/features/auth/session/session_cubit.dart';
-import 'package:diario_colaborativo/features/diary/diary_cubit/diary_cubit.dart';
+import 'package:diario_colaborativo/features/diary/diary_cubit/diary_comments_cubit.dart';
 import 'package:diario_colaborativo/features/diary/models/diary_comment.dart';
 import 'package:diario_colaborativo/features/diary/models/diary_entry.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +29,10 @@ class CommentReactionBar extends StatelessWidget {
 
   void _toggleHeart(String userId) {
     if (_isLikedBy(userId)) {
-      getIt<DiaryCubit>().removeCommentReaction(
+      getIt<DiaryCommentsCubit>().removeCommentReaction(
           entry: entry, comment: comment, emoji: _heartEmoji);
     } else {
-      getIt<DiaryCubit>().addCommentReaction(
+      getIt<DiaryCommentsCubit>().addCommentReaction(
           entry: entry, comment: comment, emoji: _heartEmoji);
     }
   }
@@ -77,12 +77,12 @@ class CommentReactionBar extends StatelessWidget {
                             onTap: () {
                               overlayEntry.remove();
                               if (isActive) {
-                                getIt<DiaryCubit>().removeCommentReaction(
+                                getIt<DiaryCommentsCubit>().removeCommentReaction(
                                     entry: entry,
                                     comment: comment,
                                     emoji: emoji);
                               } else {
-                                getIt<DiaryCubit>().addCommentReaction(
+                                getIt<DiaryCommentsCubit>().addCommentReaction(
                                     entry: entry,
                                     comment: comment,
                                     emoji: emoji);

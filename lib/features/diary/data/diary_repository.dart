@@ -1,9 +1,9 @@
 import 'package:diario_colaborativo/features/auth/session/session_cubit.dart';
 import 'package:diario_colaborativo/features/diary/data/diary_datasource.dart';
 import 'package:diario_colaborativo/features/diary/data/results/diary_failed.dart';
+import 'package:diario_colaborativo/features/diary/models/create_diary_entry_input.dart';
 import 'package:diario_colaborativo/features/diary/models/diary_comment.dart';
 import 'package:diario_colaborativo/features/diary/models/diary_entry.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../../core/helpers/result.dart';
 
@@ -16,22 +16,20 @@ class DiaryRepository {
 
   String? get _userId => _sessionCubit.state.loggedUser?.uid;
 
-  Future<Result<DiaryFailed, DiaryEntry>> create({
-    required String text,
-    List<Uint8List> imageBytes = const [],
-    String cardGradientId = 'cream',
-    String? moodTagId,
-  }) async {
+  Future<Result<DiaryFailed, DiaryEntry>> create(
+    CreateDiaryEntryInput input,
+  ) async {
     final userId = _userId;
     if (userId == null) {
       return const Failure(DiaryFailed.notAuthenticated);
     }
+    final payload = input.normalizedCopy();
     return _datasource.create(
       userId: userId,
-      text: text,
-      imageBytes: imageBytes,
-      cardGradientId: cardGradientId,
-      moodTagId: moodTagId,
+      text: payload.text,
+      imageBytes: payload.imageBytes,
+      cardGradientId: payload.cardGradientId,
+      moodTagId: payload.moodTagId,
     );
   }
 

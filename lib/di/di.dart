@@ -28,6 +28,7 @@ import '../core/remote_config/app_remote_config.dart';
 import '../features/auth/data/auth_repository.dart';
 import '../features/diary/data/diary_datasource.dart';
 import '../features/diary/data/diary_repository.dart';
+import '../features/diary/diary_cubit/diary_comments_cubit.dart';
 import '../features/diary/diary_cubit/diary_cubit.dart';
 
 final getIt = GetIt.I;
@@ -44,16 +45,13 @@ Future<void> configureDependencies(FlavorConfig config) async {
   getIt.registerFactory(() => const FlutterSecureStorage());
   getIt.registerFactory(() => AppSecureStorage(getIt()));
 
-  // Firebase Auth - REGISTRAR ANTES DOS DEPENDENTES!
   getIt.registerSingleton(FirebaseAuth.instance);
-  // serverClientId (Web Client ID) é necessário para Firebase Auth no Android.
   getIt.registerFactory(() => GoogleSignIn(
         serverClientId: DefaultFirebaseOptions.webClientId,
       ));
 
   getIt.registerSingleton(AlertAreaCubit());
 
-  // Auth - AGORA PODE REGISTRAR DEPOIS DAS DEPENDÊNCIAS
   getIt.registerFactory<AuthDatasource>(() => RemoteAuthDatasource(getIt(), getIt()));
   getIt.registerLazySingleton(() => AuthRepository(getIt(), getIt()));
 
@@ -67,8 +65,6 @@ Future<void> configureDependencies(FlavorConfig config) async {
   getIt.registerSingleton(AppRemoteConfig(getIt()));
 
   getIt.registerSingleton(SessionCubit());
-
-  // Diary - entradas do diário (Firestore + Storage)
   getIt.registerSingleton(FirebaseFirestore.instance);
   getIt.registerSingleton(FirebaseStorage.instance);
   getIt.registerFactory<DiaryDatasource>(
@@ -81,7 +77,13 @@ Future<void> configureDependencies(FlavorConfig config) async {
         getIt<DiaryDatasource>(),
         getIt<SessionCubit>(),
       ));
-  getIt.registerLazySingleton(() => DiaryCubit());
+  getIt.registerLazySingleton(() => DiaryCommentsCubit());
+  getIt.registerLazySingleton(
+    () => DiaryCubit(
+      onEntryDeleted: (entryId) =>
+          getIt<DiaryCommentsCubit>().clearCacheForEntry(entryId),
+    ),
+  );
 
   getIt.registerFactory<ProfileDatasource>(
     () => RemoteProfileDatasource(

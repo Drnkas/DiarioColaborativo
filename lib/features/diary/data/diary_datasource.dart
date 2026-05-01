@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 
 import '../../../core/helpers/result.dart';
 
-
 abstract class DiaryDatasource {
   Future<Result<DiaryFailed, DiaryEntry>> create({
     required String userId,

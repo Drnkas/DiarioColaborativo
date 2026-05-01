@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:diario_colaborativo/core/theme/app_theme.dart';
+import 'package:diario_colaborativo/core/widgets/app_loading_overlay.dart';
 import 'package:diario_colaborativo/di/di.dart';
 import 'package:diario_colaborativo/features/auth/models/user.dart';
 import 'package:diario_colaborativo/features/auth/session/session_cubit.dart';
@@ -116,7 +117,9 @@ class _ProfilePageView extends StatelessWidget {
       length: 2,
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Column(
+        body: AppLoadingOverlay(
+          isLoading: state.status == ProfilePageStatus.loading,
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Capa + avatar sobreposto
@@ -136,13 +139,6 @@ class _ProfilePageView extends StatelessWidget {
                         : null,
                   ),
                 ),
-                if (state.status == ProfilePageStatus.loading)
-                  const Positioned.fill(
-                    child: ColoredBox(
-                      color: Colors.black12,
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                  ),
                 // Avatar sobrepondo a capa
                 Positioned(
                   bottom: -44,
@@ -293,6 +289,7 @@ class _ProfilePageView extends StatelessWidget {
               ),
             ),
           ],
+          ),
         ),
       ),
     );
