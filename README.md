@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/images/logo_rosa.png" alt="Logo Diário Colaborativo" width="160" />
+  <img src="./assets/images/logo_rosa.png" alt="Logo Diário Colaborativo" width="260" />
 </p>
 
 <p align="center">
